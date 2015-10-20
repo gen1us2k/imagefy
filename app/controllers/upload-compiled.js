@@ -14,10 +14,16 @@ var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
-var express = require('express'),
-    router = express.Router(),
-    multipart = require('connect-multiparty'),
-    multipartMiddleware = multipart(),
+var _express = require('express');
+
+var _express2 = _interopRequireDefault(_express);
+
+var _connectMultiparty = require('connect-multiparty');
+
+var _connectMultiparty2 = _interopRequireDefault(_connectMultiparty);
+
+var router = _express2['default'].Router(),
+    multipartMiddleware = (0, _connectMultiparty2['default'])(),
     db = null,
     flow = null,
     ACCESS_CONTROLL_ALLOW_ORIGIN = true;

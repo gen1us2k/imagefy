@@ -19,7 +19,8 @@
     "method-override": "^2.3.0",
     "morgan": "^1.6.1",
     "multipart": "^0.1.5",
-    "serve-favicon": "^2.3.0"
+    "serve-favicon": "^2.3.0",
+    "stream-buffers": "^2.2.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0",

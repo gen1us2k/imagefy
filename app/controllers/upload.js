@@ -1,10 +1,10 @@
 import fs from 'fs';
 import config from '../../config/config.js';
 import path from 'path';
+import express from 'express';
 
-var express = require('express'),
-  router = express.Router(),
-  multipart = require('connect-multiparty'),
+import multipart from 'connect-multiparty';
+let router = express.Router(),
   multipartMiddleware = multipart(),
   db = null,
   flow = null,
