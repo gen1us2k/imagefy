@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express'),
     router = express.Router(),
     db = null;
@@ -17,5 +19,7 @@ router.get('/', function (req, res, next) {
                 pingResponse: rslt
             });
         }
-    })
+    });
 });
+
+//# sourceMappingURL=home-compiled.js.map
