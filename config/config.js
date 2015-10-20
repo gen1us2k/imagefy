@@ -10,7 +10,7 @@ var config = {
     },
     port: 3000,
     riak: ['localhost:8087'],
-    useRiak: false,
+    useRiak: true,
     storageDir: 'storage'
   },
 

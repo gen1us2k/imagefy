@@ -2,6 +2,9 @@ import fs from 'fs';
 import config from '../../config/config.js';
 import path from 'path';
 import express from 'express';
+import streamBuffers from 'stream-buffers';
+
+import stream from 'stream';
 
 import multipart from 'connect-multiparty';
 let router = express.Router(),
@@ -15,6 +18,7 @@ module.exports = function (app, createClient, Flow) {
   db = createClient();
   flow = Flow;
 };
+
 
 // Handle uploads through Flow.js
 router.post('/upload', multipartMiddleware, function (req, res) {
@@ -32,6 +36,21 @@ router.post('/upload', multipartMiddleware, function (req, res) {
 
           flow.clean(identifier);
         })
+      } else {
+        var myWritableStreamBuffer = new streamBuffers.WritableStreamBuffer();
+        flow.write(identifier, myWritableStreamBuffer);
+        myWritableStreamBuffer.on('finish', function(){
+          db.storeValue({
+            bucket: 'images',
+            key: identifier,
+            value: myWritableStreamBuffer.getContentsAsString('utf-8')
+          }, function(err, rslt){
+            if (!err){
+              res.status(201).send();
+            }
+          });
+        })
+
       }
     }
     res.status(status).send();
@@ -68,6 +87,16 @@ router.get('/download/:identifier', function (req, res) {
 
   if (!config.useRiak) {
     res.status(200).sendFile(path.resolve(config.storageDir + '/' + req.params.identifier));
+  } else {
+    db.fetchValue({
+      bucket: 'images',
+      key: req.params.identifier,
+
+    }, function(err, rslt){
+      let rObj = rslt.values.shift();
+      let content = rObj.value;
+      res.send(content.toString());
+    })
   }
 
 });

@@ -18,6 +18,14 @@ var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
 
+var _streamBuffers = require('stream-buffers');
+
+var _streamBuffers2 = _interopRequireDefault(_streamBuffers);
+
+var _stream = require('stream');
+
+var _stream2 = _interopRequireDefault(_stream);
+
 var _connectMultiparty = require('connect-multiparty');
 
 var _connectMultiparty2 = _interopRequireDefault(_connectMultiparty);
@@ -49,6 +57,20 @@ router.post('/upload', multipartMiddleware, function (req, res) {
         writeFile.on('finish', function () {
 
           flow.clean(identifier);
+        });
+      } else {
+        var myWritableStreamBuffer = new _streamBuffers2['default'].WritableStreamBuffer();
+        flow.write(identifier, myWritableStreamBuffer);
+        myWritableStreamBuffer.on('finish', function () {
+          db.storeValue({
+            bucket: 'images',
+            key: identifier,
+            value: myWritableStreamBuffer.getContentsAsString('utf-8')
+          }, function (err, rslt) {
+            if (!err) {
+              res.status(201).send();
+            }
+          });
         });
       }
     }
@@ -86,6 +108,16 @@ router.get('/download/:identifier', function (req, res) {
 
   if (!_configConfigJs2['default'].useRiak) {
     res.status(200).sendFile(_path2['default'].resolve(_configConfigJs2['default'].storageDir + '/' + req.params.identifier));
+  } else {
+    db.fetchValue({
+      bucket: 'images',
+      key: req.params.identifier
+
+    }, function (err, rslt) {
+      var rObj = rslt.values.shift();
+      var content = rObj.value;
+      res.send(content.toString());
+    });
   }
 });
 
