@@ -1,14 +1,26 @@
-import fs from 'fs';
-import config from '../../config/config.js';
-import path from 'path';
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
+var _configConfigJs = require('../../config/config.js');
+
+var _configConfigJs2 = _interopRequireDefault(_configConfigJs);
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
 
 var express = require('express'),
-  router = express.Router(),
-  multipart = require('connect-multiparty'),
-  multipartMiddleware = multipart(),
-  db = null,
-  flow = null,
-  ACCESS_CONTROLL_ALLOW_ORIGIN = true;
+    router = express.Router(),
+    multipart = require('connect-multiparty'),
+    multipartMiddleware = multipart(),
+    db = null,
+    flow = null,
+    ACCESS_CONTROLL_ALLOW_ORIGIN = true;
 
 module.exports = function (app, createClient, Flow) {
   app.use('/', router);
@@ -24,14 +36,14 @@ router.post('/upload', multipartMiddleware, function (req, res) {
       res.header("Access-Control-Allow-Origin", "*");
     }
     if (status === 'done') {
-      if (!config.useRiak) {
-        let destination = config.storageDir + '/' + identifier;
-        let writeFile = fs.createWriteStream(destination);
+      if (!_configConfigJs2['default'].useRiak) {
+        var destination = _configConfigJs2['default'].storageDir + '/' + identifier;
+        var writeFile = _fs2['default'].createWriteStream(destination);
         flow.write(identifier, writeFile);
         writeFile.on('finish', function () {
 
           flow.clean(identifier);
-        })
+        });
       }
     }
     res.status(status).send();
@@ -66,8 +78,9 @@ router.get('/upload', function (req, res) {
 
 router.get('/download/:identifier', function (req, res) {
 
-  if (!config.useRiak) {
-    res.status(200).sendFile(path.resolve(config.storageDir + '/' + req.params.identifier));
+  if (!_configConfigJs2['default'].useRiak) {
+    res.status(200).sendFile(_path2['default'].resolve(_configConfigJs2['default'].storageDir + '/' + req.params.identifier));
   }
-
 });
+
+//# sourceMappingURL=upload-compiled.js.map

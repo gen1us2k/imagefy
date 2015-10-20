@@ -1,6 +1,8 @@
+'use strict';
+
 var path = require('path'),
-  rootPath = path.normalize(__dirname + '/..'),
-  env = process.env.NODE_ENV || 'development';
+    rootPath = path.normalize(__dirname + '/..'),
+    env = process.env.NODE_ENV || 'development';
 
 var config = {
   development: {
@@ -34,3 +36,5 @@ var config = {
 };
 
 module.exports = config[env];
+
+//# sourceMappingURL=config-compiled.js.map

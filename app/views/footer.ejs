@@ -2,7 +2,7 @@
     (function () {
         var r = new Flow({
             target: '/upload',
-            chunkSize: 1024*1024,
+            chunkSize: 128*1024,
             testChunks: false
         });
         // Flow.js isn't supported, fall back on a different method
